@@ -37,6 +37,9 @@ module.exports = appInfo => {
     whitelist: [
       '.jpg', '.jpeg', // image/jpeg
       '.zip', '.rar', // 压缩文件
+      '.txt',
+      '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx',
+      '.dbf',
     ],
     fileSize: '5mb',
   };
