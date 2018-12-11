@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0,maximum-scale=1.0,user-scalable=yes"
+  />
+  <title>文件上传</title>
+  <script src="//unpkg.com/vue/dist/vue.js"></script>
+  <script src="//unpkg.com/element-ui@2.0.4/lib/index.js"></script>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"></link>
+
+</head>
+
+<body>
+  <div id="app">
+  <el-upload action="/files/demo/upload" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove"
+    :on-success="handleUploadSuccess">
+    <i class="el-icon-plus"></i>
+  </el-upload>
+  <el-dialog :visible.sync="dialogVisible" size="tiny">
+    <img width="100%" :src="dialogImageUrl" alt="">
+  </el-dialog>
+  </div>
+  <script>
+    var Main = {
+      data() {
+        return {
+          dialogImageUrl: '',
+          dialogVisible: false
+        };
+      },
+      methods: {
+        handleRemove(file, fileList) {
+          console.log(file, fileList);
+        },
+        handlePictureCardPreview(file) {
+          this.dialogImageUrl = file.url;
+          this.dialogVisible = true;
+        },
+        handleUploadSuccess(res, file) {
+          console.log({ res, file });
+          if (res.errcode !== 0) {
+            this.$notify.error({
+              title: '错误',
+              message: '文件上传失败',
+            });
+            return;
+          }
+          // this.imageUrl = URL.createObjectURL(file.raw);
+          // this.partyForm.image = res.id;
+          this.$message({ type: 'success', message: '文件上传成功' });
+        },
+      }
+    };
+    var Ctor = Vue.extend(Main)
+    var app = new Ctor().$mount('#app')
+
+  </script>
+
+</body>
