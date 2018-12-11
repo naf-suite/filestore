@@ -32,5 +32,14 @@ module.exports = appInfo => {
 
   config.onerror = ErrorConfig;
 
+  // 文件上传配置
+  config.multipart = {
+    whitelist: [
+      '.jpg', '.jpeg', // image/jpeg
+      '.zip', '.rar', // 压缩文件
+    ],
+    fileSize: '5mb',
+  };
+
   return config;
 };
