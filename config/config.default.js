@@ -40,6 +40,7 @@ module.exports = appInfo => {
       '.txt',
       '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx',
       '.dbf',
+      '.pdf',
     ],
     fileSize: '5mb',
   };
