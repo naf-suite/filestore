@@ -12,7 +12,7 @@ class FilesController extends Controller {
 
   async upload() {
     const { ctx, app } = this;
-    const { appid, catalog } = ctx.params;
+    const { appid, catalog, item } = ctx.params;
     assert(appid);
     const stream = await ctx.getFileStream();
     ctx.logger.debug(stream);
@@ -20,18 +20,22 @@ class FilesController extends Controller {
     const rootPath = `${app.config.cdn.repos_root_path}`;
     const rootUrl = `${app.config.cdn.repos_root_url}`;
     const dirs = [ appid ];
-    if (catalog) {
-      dirs.push(catalog);
+    if (catalog && catalog !== '_') {
+      const subs = catalog.split('_');
+      dirs.push(...subs);
     }
-    const saved = await this.saveFile(rootPath, dirs, stream);
+    const saved = await this.saveFile(rootPath, dirs, stream, item);
     const uri = `${rootUrl}/${dirs.join('/')}/${saved.fileName}`;
     ctx.body = { errcode: 0, errmsg: 'ok', id: saved.id, name: saved.fileName, uri };
   }
 
-  async saveFile(rootPath, dirs, stream) {
+  async saveFile(rootPath, dirs, stream, name) {
     const ctx = this.ctx;
     const ext = extname(stream.filename).toLowerCase();
-    const name = moment().format('YYYYMMDDHHmmss');
+    // TODO: 指定文件名或者按时间生成文件名
+    // const name = moment().format('YYYYMMDDHHmmss');
+    if (!name) name = moment().format('YYYYMMDDHHmmss');
+
     // TODO: 检查根路径是否存在，不存在则创建
     ctx.logger.debug('rootPath: ', rootPath);
     if (!fs.existsSync(rootPath)) {
